@@ -11,8 +11,11 @@ import {
 
 import { Colors } from "../../../libs/constants";
 
+import DefaultStyles from "../../../libs/default-styles";
+
 import Card from "../../card";
 import Input from "../../input";
+import CustomButton from "../../custom-button";
 import NumberContainer from "../../number-container";
 
 const StartGameScreen = (props) => {
@@ -50,9 +53,13 @@ const StartGameScreen = (props) => {
       }}
     >
       <View style={styles.screen}>
-        <Text style={styles.title}>Start New Game!</Text>
+        <Text style={{ ...DefaultStyles.titleText, ...styles.title }}>
+          Start New Game!
+        </Text>
         <Card style={styles.container}>
-          <Text>Enter a number between 1 to 99</Text>
+          <Text style={DefaultStyles.bodyText}>
+            Enter a number between 1 to 99
+          </Text>
           <Input
             style={styles.input}
             blurOnSubmit={true}
@@ -82,14 +89,15 @@ const StartGameScreen = (props) => {
         </Card>
         {confirmed ? (
           <Card style={styles.summaryContainer}>
-            <Text>You selected</Text>
+            <Text style={DefaultStyles.bodyText}>You selected</Text>
             <NumberContainer>{selectedNumber}</NumberContainer>
-            <Button
-              title="START GAME"
+            <CustomButton
               onPress={() => {
                 props.onStartGame(selectedNumber);
               }}
-            />
+            >
+              START GAME
+            </CustomButton>
           </Card>
         ) : null}
       </View>
@@ -104,7 +112,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    fontSize: 24,
+    fontSize: 20,
     marginVertical: 15,
   },
   container: {
