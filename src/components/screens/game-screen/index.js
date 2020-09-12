@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, StyleSheet, Alert, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Alert,
+  FlatList,
+  Dimensions,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import randomNumberGenerator from "../../../libs/random-number-generator";
@@ -14,8 +21,28 @@ const GameScreen = (props) => {
 
   const [currentGuess, setCurrentGuess] = useState(initialGuess);
   const [guesses, setGuesses] = useState([initialGuess.toString()]);
+  const [availableDeviceWidth, setAvailableDeviceWidth] = useState(
+    Dimensions.get("window").width
+  );
+  const [availableDeviceHeight, setAvailableDeviceHeight] = useState(
+    Dimensions.get("window").height
+  );
 
   const { userChoice, onGameOver } = props;
+
+  useEffect(() => {
+    const updateLayout = () => {
+      setAvailableDeviceWidth(Dimensions.get("window").width);
+      setAvailableDeviceHeight(Dimensions.get("window").height);
+    };
+
+    Dimensions.addEventListener("change", updateLayout);
+
+    // clean up function
+    return () => {
+      Dimensions.removeEventListener("change", updateLayout);
+    };
+  });
 
   useEffect(() => {
     if (currentGuess === userChoice) {
@@ -51,7 +78,10 @@ const GameScreen = (props) => {
       currentGuess
     );
     setCurrentGuess(nextGuess);
-    setGuesses((prevGuesses) => [nextGuess.toString(), ...prevGuesses]);
+    setGuesses((prevGuesses) => {
+      // console.log({ prevGuesses, nextGuessss: nextGuess.toString() })
+      return [nextGuess.toString(), ...prevGuesses]
+    });
   };
 
   const renderListItem = (listLength, itemData) => {
@@ -65,11 +95,21 @@ const GameScreen = (props) => {
     );
   };
 
-  return (
-    <View style={styles.screen}>
-      <Text style={DefaultStyles.titleText}>Opponent's Guess</Text>
+  let listContainerStyle = styles.listContainer;
+
+  if (availableDeviceWidth < 350) {
+    listContainerStyle = styles.listContainerBig;
+  }
+
+  let gameControls = (
+    <React.Fragment>
       <NumberContainer>{currentGuess}</NumberContainer>
-      <Card style={styles.buttonConainer}>
+      <Card
+        style={{
+          ...styles.buttonContainer,
+          ...{ marginTop: availableDeviceHeight > 600 ? 20 : 5 },
+        }}
+      >
         <CustomButton
           onPress={() => {
             onGuessHandler("lower");
@@ -85,7 +125,36 @@ const GameScreen = (props) => {
           <Ionicons name="md-add" size={24} color="white" />
         </CustomButton>
       </Card>
-      <View style={styles.listContainer}>
+    </React.Fragment>
+  );
+
+  if (availableDeviceHeight < 500) {
+    gameControls = (
+      <View style={styles.controls}>
+        <CustomButton
+          onPress={() => {
+            onGuessHandler("lower");
+          }}
+        >
+          <Ionicons name="md-remove" size={24} color="white" />
+        </CustomButton>
+        <NumberContainer>{currentGuess}</NumberContainer>
+        <CustomButton
+          onPress={() => {
+            onGuessHandler("greater");
+          }}
+        >
+          <Ionicons name="md-add" size={24} color="white" />
+        </CustomButton>
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.screen}>
+      <Text style={DefaultStyles.titleText}>Opponent's Guess</Text>
+      {gameControls}
+      <View style={listContainerStyle}>
         {/* <ScrollView contentContainerStyle={styles.list}>
           {guesses.map((guess, index) =>
             renderListItem(guess, guesses.length - index)
@@ -108,16 +177,25 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: "center",
   },
-  buttonConainer: {
+  controls: {
     flexDirection: "row",
     justifyContent: "space-around",
-    marginTop: 20,
+    alignItems: "center",
+    width: "80%",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
     width: 400,
     maxWidth: "90%",
   },
   listContainer: {
     flex: 1,
     width: "60%",
+  },
+  listContainerBig: {
+    flex: 1,
+    width: "80%",
   },
   list: {
     flexGrow: 1,

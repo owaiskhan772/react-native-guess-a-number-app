@@ -1,5 +1,12 @@
-import React from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ScrollView,
+  Dimensions,
+} from "react-native";
 
 import { Colors } from "../../../libs/constants";
 
@@ -8,28 +15,73 @@ import DefaultStyles from "../../../libs/default-styles";
 import CustomButton from "../../custom-button";
 
 const GameOverScreen = (props) => {
+  const [availableDeviceWidth, setAvailableDeviceWidth] = useState(
+    Dimensions.get("window").width
+  );
+  const [availableDeviceHeight, setAvailableDeviceHeight] = useState(
+    Dimensions.get("window").height
+  );
+
+  useEffect(() => {
+    const updateLayout = () => {
+      setAvailableDeviceWidth(Dimensions.get("window").width);
+      setAvailableDeviceHeight(Dimensions.get("window").height);
+    };
+
+    Dimensions.addEventListener("change", updateLayout);
+
+    return () => {
+      Dimensions.removeEventListener("change", updateLayout);
+    };
+  });
+
   return (
-    <View style={styles.screen}>
-      <Text style={{ ...DefaultStyles.titleText, ...styles.title }}>
-        Game Over!
-      </Text>
-      <View style={styles.imageContainer}>
-        <Image
-          style={styles.image}
-          source={require("../../../../assets/images/success.png")}
-          resizeMode="cover"
-        />
-      </View>
-      <View style={styles.resultContainer}>
-        <Text style={{ ...DefaultStyles.bodyText, ...styles.resultText }}>
-          Your phone needed{" "}
-          <Text style={styles.highlight}>{props.guessRounds}</Text> rounds to
-          guess your selected number{" "}
-          <Text style={styles.highlight}>{props.userNumber}</Text>
+    <ScrollView>
+      <View style={styles.screen}>
+        <Text style={{ ...DefaultStyles.titleText, ...styles.title }}>
+          Game Over!
         </Text>
+        <View
+          style={{
+            ...styles.imageContainer,
+            ...{
+              width: availableDeviceWidth * 0.7,
+              height: availableDeviceWidth * 0.7,
+              borderRadius: (availableDeviceWidth * 0.7) / 2,
+              marginVertical: availableDeviceHeight / 30,
+            },
+          }}
+        >
+          <Image
+            style={styles.image}
+            source={require("../../../../assets/images/success.png")}
+            resizeMode="cover"
+          />
+        </View>
+        <View
+          style={{
+            ...styles.resultContainer,
+            ...{ marginVertical: availableDeviceHeight / 60 },
+          }}
+        >
+          <Text
+            style={{
+              ...DefaultStyles.bodyText,
+              ...styles.resultText,
+              ...{ fontSize: availableDeviceHeight < 400 ? 16 : 20 },
+            }}
+          >
+            Your phone needed{" "}
+            <Text style={styles.highlight}>{props.guessRounds}</Text> rounds to
+            guess your selected number{" "}
+            <Text style={styles.highlight}>{props.userNumber}</Text>
+          </Text>
+        </View>
+        <CustomButton onPress={props.onRestartGame}>
+          START NEW GAME
+        </CustomButton>
       </View>
-      <CustomButton onPress={props.onRestartGame}>START NEW GAME</CustomButton>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -38,19 +90,16 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    paddingVertical: 10,
   },
   title: {
     fontSize: 20,
     marginVertical: 15,
   },
   imageContainer: {
-    width: 300,
-    height: 300,
-    borderRadius: 150,
     borderWidth: 3,
     borderColor: "black",
     overflow: "hidden",
-    marginVertical: 30,
   },
   image: {
     width: "100%",
@@ -58,11 +107,9 @@ const styles = StyleSheet.create({
   },
   resultContainer: {
     marginHorizontal: 30,
-    marginVertical: 15,
   },
   resultText: {
     textAlign: "center",
-    fontSize: 20,
   },
   highlight: {
     fontFamily: "open-sans-bold",

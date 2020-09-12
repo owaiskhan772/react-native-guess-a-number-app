@@ -4,25 +4,17 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  TouchableNativeFeedback,
-  Platform,
 } from "react-native";
 
 import { Colors } from "../../libs/constants";
 
 const CustomButton = (props) => {
-  let BtnComp = TouchableOpacity;
-  if (Platform.OS === "android" && Platform.Version >= 21) {
-    BtnComp = TouchableNativeFeedback;
-  }
   return (
-    <View style={styles.btnContainer}>
-      <BtnComp activeOpacity={0.6} onPress={props.onPress}>
-        <View style={styles.button}>
-          <Text style={styles.buttonText}>{props.children}</Text>
-        </View>
-      </BtnComp>
-    </View>
+    <TouchableOpacity activeOpacity={0.6} onPress={props.onPress}>
+      <View style={styles.button}>
+        <Text style={styles.buttonText}>{props.children}</Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 
@@ -37,10 +29,6 @@ const styles = StyleSheet.create({
     color: "white",
     fontFamily: "open-sans",
     fontSize: 18,
-  },
-  btnContainer: {
-    borderRadius: 25,
-    overflow: "hidden",
   },
 });
 
