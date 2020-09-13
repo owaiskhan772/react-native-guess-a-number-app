@@ -64,18 +64,18 @@ const StartGameScreen = (props) => {
   };
 
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={styles.screen}>
       <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={30}>
         <TouchableWithoutFeedback
           onPress={() => {
             Keyboard.dismiss();
           }}
         >
-          <View style={styles.screen}>
+          <View style={styles.container}>
             <Text style={{ ...DefaultStyles.titleText, ...styles.title }}>
               Start New Game!
             </Text>
-            <Card style={styles.container}>
+            <Card style={styles.cardContainer}>
               <Text style={DefaultStyles.bodyText}>
                 Enter a number between 1 to 99
               </Text>
@@ -129,6 +129,10 @@ const StartGameScreen = (props) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
+    alignItems: "center",
+  },
+  container: {
+    flex: 1,
     paddingTop: 10,
     alignItems: "center",
   },
@@ -136,7 +140,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginVertical: 15,
   },
-  container: {
+  cardContainer: {
     alignItems: "center",
     width: "80%",
     maxWidth: "95%",
