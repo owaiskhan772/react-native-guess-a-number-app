@@ -13,7 +13,7 @@ Checkout this repo, install dependencies, then start the gulp process with the f
 ```
 > git clone https://github.com/owaiskhan772/react-native-guess-a-number-app.git
 > cd react-native-the-meals-app
-> npm install --g expo-cli (Install expo-cli globally)
+> npm install --global expo-cli (Install expo-cli globally)
 > npm install or yarn
 > npm start or yarn start
 > Expo Developer Tools will open and see for 3 options to start the application (i.e. on Android, on iOS and in Web Browser)
@@ -24,7 +24,7 @@ Checkout this repo, install dependencies, then start the gulp process with the f
 Click [here](https://github.com/owaiskhan772/react-native-guess-a-number-app) then download the .zip file. Extract the contents of the zip file, then open your terminal, change to the project directory, and:
 
 ```
-> npm install --g expo-cli (Install expo-cli globally)
+> npm install --global expo-cli (Install expo-cli globally)
 > npm install or yarn
 > npm start or yarn start
 > Expo Developer Tools will open and see for 3 options to start the application (i.e. on Android, on iOS and in Web Browser)
